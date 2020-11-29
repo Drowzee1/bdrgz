@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="border-width: 0px">
+    <form action="#" method = "POST" enctype="multipart/form-data" autocomplete="off">
+    <div class="row">
+        <div class="col">
+            <select name ="criteria" class="form-control" id="exampleFormControlSelect1" >
+                <option disabled>Выберите критерий</option>
+                    <option value="game_name">Название</option>
+                    <option value="genre">Жанр</option>
+                    <option value="release_year">Год выхода</option>
+                    <option value="quantity">Количество</option>
+                    <option value="price">Цена</option>
+            </select>
+            <br>
+        </div>
+       
+        <div class="col">
+          <input type="text" name="search" class="form-control">
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Поиск</button>
+        </div>
+</div>
+</form>
+</div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+        <p>{{msg}}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+<div class="card" style="border-width: 3px">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Название</th>
+            <th scope="col">Жанр</th>
+            <th scope="col">Год релиза</th>
+            <th scope="col">Количество</th>
+            <th scope="col">Картинка</th>
+            <th scope="col">Цена</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for x in range (0, rows) %}             
+            <tr>
+            <th scope="row">{{transfer[x].id}}</th>
+            <td>{{transfer[x].game_name}}</td>
+            <td>{{transfer[x].genre}}</td>
+            <td>{{transfer[x].release_year}}</td>
+            <td>{{transfer[x].quantity}}</td>
+            <td><a href="{{transfer[x].pic_url}}">{{transfer[x].game_name}}</a></td>
+            <td>{{transfer[x].price}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}

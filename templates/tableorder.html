@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="border-width: 0px">
+  <form action="#" method = "POST" enctype="multipart/form-data" autocomplete="off">
+  <div class="row">
+      <div class="col">
+          <select name ="criteria" class="form-control" id="exampleFormControlSelect1" >
+              <option disabled>Выберите критерий</option>
+                  <option value="client_id">ID клиента</option>
+                  <option value="name">Имя клиента</option>
+                  <option value="email">Почта клиента</option>
+                  <option value="game_id">ID Игры</option>
+                  <option value="game_name">Название игры</option>
+          </select>
+          <br>
+      </div>
+      
+      <div class="col">
+        <input type="text" name="search" class="form-control">
+      </div>
+      <div class="col">
+          <button type="submit" class="btn btn-primary">Поиск</button>
+      </div>
+</div>
+</form>
+</div>
+{% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+        <p>{{msg}}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+<div class="card" style="border-width: 3px">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID Клиента</th>
+            <th scope="col">Клиент</th>
+            <th scope="col">Почта клиента</th>
+            <th scope="col">ID Игры</th>
+            <th scope="col">Название игры</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for x in range (0, rows) %}             
+            <tr>
+            <th scope="row">{{transfer[x].id}}</th>
+            <td>{{transfer[x].client_id}}</td>
+            <td>{{transfer[x].name}}</td>
+            <td>{{transfer[x].email}}</td>
+            <td>{{transfer[x].game_id}}</td>
+            <td>{{transfer[x].game_name}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}

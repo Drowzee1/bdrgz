@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class="card" style="border-width: 3px">
+        <h2 style="text-align: center;">Добавление клиента</h2>
+        <form action="#" method = "POST" enctype="multipart/form-data" autocomplete="off">
+            <ul>
+                <li>
+                  <label for="name">Фамилия и инициалы:</label>
+                  <input type="text" class="form-control" style="width: 64rem;" name="name">
+                </li>
+                <li>
+                  <label for="email">E-mail:</label>
+                  <input type="email" class="form-control" style="width: 64rem;" name="email">
+                </li>
+                <li>
+                  <label for="phone">Номер телефона:</label>
+                  <input type="tel" class="form-control" style="width: 64rem;" name="phone">
+                </li>
+                <br>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                    <!-- <input type="submit" value="Submit"> -->
+                
+            </ul>
+        </form>
+        </div>
+{% endblock %}

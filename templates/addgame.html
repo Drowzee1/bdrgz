@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class="card" style="border-width: 3px">
+        <h2 style="text-align: center;">Добавление игры</h2>
+        <form action="#" method = "POST" enctype="multipart/form-data" autocomplete="off">
+            <ul>
+                <li>
+                  <label for="game_name">Название игры:</label>
+                  <input type="text" class="form-control" style="width: 64rem;" name="game_name">
+                </li>
+                <li>
+                  <label for="genre">Жанр игры:</label>
+                  <input type="text" class="form-control" style="width: 64rem;" name="genre">
+                </li>
+                <li>
+                  <label for="release_year">Год выпуска:</label>
+                  <input type="tel" class="form-control" style="width: 64rem;" name="release_year">
+                </li>
+                <li>
+                    <label for="quantity">Количество:</label>
+                    <input type="tel" class="form-control" style="width: 64rem;" name="quantity">
+                </li>
+                <!-- Какого то хера цена заработала только после того, как я перетащил его над полем заливки файла -->
+                <li>
+                    <label for="price">Цена:</label>
+                    <input type="tel" class="form-control" style="width: 64rem;" name="price">
+                </li>
+                <li>
+                    <label for="pic">Обложка:</label> 
+                    <input type="file" class="form-control-file" accept="image/*" name="pic">
+                </li>
+                <br>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                    
+                
+            </ul>
+        </form>
+        </div>
+{% endblock %}

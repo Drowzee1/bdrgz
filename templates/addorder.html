@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class="card" style="border-width: 3px">
+        <h2 style="text-align: center;">Добавление заказа</h2>
+        <form action="#" method = "POST" enctype="multipart/form-data" autocomplete="off">
+            <ul>
+                <li>
+                    <label for="name">Клиент:</label>
+                    <select name ="name" class="form-control" id="exampleFormControlSelect1" style="width: 64rem;">
+                    <option disabled>Выберите фамилию</option>
+                        {% for x in range (0, rows) %}
+                        {{clientura[x]}}
+                        <option value="{{x+1}}">{{clientura[x]}}</option>
+                        {% endfor %}
+                </select>
+                </li>
+                <br> 
+                <li>
+                    <label for="game_name">Игра:</label>
+                    <select name ="game_name" class="form-control" id="exampleFormControlSelect1" style="width: 64rem;">
+                    <option disabled>Выберите игру</option>
+                        {% for x in range (0, rows1) %}
+                        {{gamez[x]}}
+                        <option value="{{x+1}}">{{gamez[x]}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <br>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                    <!-- <input type="submit" value="Submit"> -->
+                
+            </ul>
+        </form>
+        </div>
+{% endblock %}
