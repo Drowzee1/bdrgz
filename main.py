@@ -1,7 +1,7 @@
 import os # Нужна для сохранения файлов
 from flask import Flask, redirect, url_for , render_template, request, send_from_directory, flash
 from werkzeug.utils import secure_filename
-from datetime import timedelta
+from datetime import timedelta, date
 from flask_sqlalchemy import SQLAlchemy
 
 # Этот го***код будет... легендарным!
@@ -18,7 +18,7 @@ class Clients(db.Model): # Создание таблицы клиентов
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    phone = db.Column(db.String(11), unique=True, nullable=False) #Телефон можно было сделать нулируевым, но думаю это превнесет много проблем с конструкторами, так что нет 
+    phone = db.Column(db.String(11), unique=True, nullable=False)  
 
     def __init__(self, name, email, phone): # Конструктор клиента
         self.name = name
@@ -52,10 +52,12 @@ class Order(db.Model): # Таблица заказов,  включает в с�
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), unique=False, nullable=False)
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'), unique=False, nullable=False) 
+    order_date = db.Column(db.Date, unique=False, nullable=False) 
 
-    def __init__(self, client_id, game_id):
+    def __init__(self, client_id, game_id, order_date):
         self.client_id = client_id
         self.game_id = game_id
+        self.order_date = order_date
 
 @app.route('/addgame/', methods = ["POST", "GET"]) # Форма добавления клиента
 def addgame(): 
@@ -105,7 +107,8 @@ def addorder():
     if request.method == "POST":
         client_id = request.form["name"]
         game_id = request.form["game_name"]
-        new_order = Order(client_id, game_id)
+        order_date = date.today()
+        new_order = Order(client_id, game_id, order_date)
         db.session.add(new_order)
         db.session.commit()
         return redirect("http://127.0.0.1:5000/orders/")
@@ -222,6 +225,10 @@ def tableorder():
                 return redirect("http://127.0.0.1:5000/orders/")
         elif request.form["criteria"] == "game_name":
             result = db.session.execute("select o.*, c.name, c.email, g.game_name from clients c inner join public.order o on c.id=o.client_id inner join games g on o.game_id=g.id where g.game_name= :val", {'val': request.form["search"]})
+            transfer = list(result)
+            rows=len(transfer)
+        elif request.form["criteria"] == "order_date":
+            result = db.session.execute("select o.*, c.name, c.email, g.game_name from clients c inner join public.order o on c.id=o.client_id inner join games g on o.game_id=g.id where o.order_date= :val", {'val': request.form["search"]})
             transfer = list(result)
             rows=len(transfer)
         return render_template("tableorder.html", transfer = transfer, rows = rows)

@@ -12,6 +12,7 @@
                   <option value="email">Почта клиента</option>
                   <option value="game_id">ID Игры</option>
                   <option value="game_name">Название игры</option>
+                  <option value="order_date">Дата заказа</option>
           </select>
           <br>
       </div>
@@ -42,6 +43,7 @@
             <th scope="col">Почта клиента</th>
             <th scope="col">ID Игры</th>
             <th scope="col">Название игры</th>
+            <th scope="col">Дата заказа</th>
           </tr>
         </thead>
         <tbody>
@@ -53,6 +55,7 @@
             <td>{{transfer[x].email}}</td>
             <td>{{transfer[x].game_id}}</td>
             <td>{{transfer[x].game_name}}</td>
+            <td>{{transfer[x].order_date}}</td>
             </tr>
             {% endfor %}
         </tbody>
