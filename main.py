@@ -254,9 +254,13 @@ def tableorder():
             transfer = list(result)
             rows=len(transfer)
         elif request.form["criteria"] == "order_date":
-            result = db.session.execute("select o.*, c.name, c.email, g.game_name from clients c inner join public.order o on c.id=o.client_id inner join games g on o.game_id=g.id where o.order_date= :val", {'val': request.form["search"]})
-            transfer = list(result)
-            rows=len(transfer)
+            if request.form["search"].replace("-", "", 2).isdigit():
+                result = db.session.execute("select o.*, c.name, c.email, g.game_name from clients c inner join public.order o on c.id=o.client_id inner join games g on o.game_id=g.id where o.order_date= :val", {'val': request.form["search"]})
+                transfer = list(result)
+                rows=len(transfer)
+            else:
+                flash("Дата в неправильном формате! (Нужный формат YYYY-MM-DD)")
+                return redirect("http://127.0.0.1:5000/orders/")
         return render_template("tableorder.html", transfer = transfer, rows = rows)
 
     else:
