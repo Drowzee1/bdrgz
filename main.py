@@ -100,10 +100,20 @@ def addclient():
         name = request.form["name"]
         email = request.form["email"]
         phone = request.form["phone"]
-        new_client = Clients(name, email, phone)
-        db.session.add(new_client)
-        db.session.commit()
-        return redirect("http://127.0.0.1:5000/clients/")
+        if (name == '') or (email == '') or (phone == ''):
+            flash("Недостаточно данных")
+            return redirect("http://127.0.0.1:5000/addclient/")
+        if phone.isdigit():
+            if (len(phone) != 11) or (phone[0] != 8):
+                flash('Телефонный номер должен содержать 11 символов и писаться в формате 8xxxxxxxxxx')
+                return redirect("http://127.0.0.1:5000/addclient/")
+            new_client = Clients(name, email, phone)
+            db.session.add(new_client)
+            db.session.commit()
+            return redirect("http://127.0.0.1:5000/clients/")
+        else:
+            flash('Телефон должен состоять из цифр!')
+            return redirect("http://127.0.0.1:5000/addclient/")
     else:
         return render_template("addclient.html")
 
