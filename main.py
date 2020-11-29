@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 
+# Этот го***код будет... легендарным!
 
 UPLOAD_FOLDER = './images' # Указывается путь к директории для сохранения файлов, точка нужна для обозначения того, что директория относительная
 app = Flask(__name__)
