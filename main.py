@@ -68,13 +68,29 @@ def addgame():
         quantity = request.form["quantity"]
         price = request.form.get("price")
         file = request.files['pic']
+        if (game_name == '') or (genre == '') or (release_year == '') or (quantity == '') or (price == '') or (file.filename == ''):
+            flash("Недостаточно данных")
+            return redirect("http://127.0.0.1:5000/addgame/")
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         pic_url = url_for('uploaded_file', filename=filename)
-        new_game = Games(game_name, genre, release_year, quantity, pic_url, price)
-        db.session.add(new_game)
-        db.session.commit()
-        return redirect("http://127.0.0.1:5000/games/")      
+        if release_year.isdigit and price.replace(".", "", 1).isdigit() and quantity.isdigit:
+            if (release_year > '2021') or (release_year < '1970'):
+                flash("Не подходящий год")
+                return redirect("http://127.0.0.1:5000/addgame/")
+            elif quantity < '0':
+                flash("Количество не может быть отрицательным!")
+                return redirect("http://127.0.0.1:5000/addgame/")
+            elif price < '0':
+                flash("Цена не может быть отрицательной!")
+                return redirect("http://127.0.0.1:5000/addgame/")
+            new_game = Games(game_name, genre, release_year, quantity, pic_url, price)
+            db.session.add(new_game)
+            db.session.commit()
+            return redirect("http://127.0.0.1:5000/games/")
+        else:
+            flash("Не верный формат года/цены/количества")
+            return redirect("http://127.0.0.1:5000/addgame/")    
     else:
         return render_template("addgame.html")
 
