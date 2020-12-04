@@ -154,6 +154,9 @@ def tableclient():
     if request.method == "POST": # После проверки критерия идет поиск первой записи по нему.
         rows = 1
         transfer = []
+        if (request.form["search"] == ''):
+            flash("Пустой запрос. Возвращена вся таблица.")
+            return redirect("http://127.0.0.1:5000/clients/")
         if request.form["criteria"] == "name":
             pupa = Clients.query.filter_by(name=request.form["search"]).first()
         elif request.form["criteria"] == "email":
@@ -175,56 +178,64 @@ def tablegame():
     if request.method == "POST": # после проверки критерия идет подсчет строк, которые нужно будет вывести, а потом выполняется SQL запрос,  
         transfer = []            # результаты которого аппендятся в трансфер массив запросами first по перебираемым ID.
         i = 0
-
+        if (request.form["search"] == ''):
+            flash("Пустой запрос. Возвращена вся таблица.")
+            return redirect("http://127.0.0.1:5000/games/")
         if request.form["criteria"] == "game_name":
-            rows = Games.query.filter_by(game_name=request.form["search"]).count()
-            result = db.session.execute("SELECT * FROM games WHERE game_name = :val", {'val': request.form["search"]})
-
+            result = db.session.execute("select *, ROUND(price - (price * .10), 2) AS discounted from games where game_name = :val", {'val': request.form["search"]})
+            transfer = list(result)
+            rows=len(transfer)
         elif request.form["criteria"] == "genre":
-            rows = Games.query.filter_by(genre=request.form["search"]).count()
-            result = db.session.execute("SELECT * FROM games WHERE genre = :val", {'val': request.form["search"]})
-
+            result = db.session.execute("select *, ROUND(price - (price * .10), 2) AS discounted from games where genre = :val", {'val': request.form["search"]})
+            transfer = list(result)
+            rows=len(transfer)
         elif request.form["criteria"] == "release_year":
             if request.form["search"].isdigit():
-                rows = Games.query.filter_by(release_year=request.form["search"]).count()
-                result = db.session.execute("SELECT * FROM games WHERE release_year = :val", {'val': request.form["search"]})
+                result = db.session.execute("select *, ROUND(price - (price * .10), 2) AS discounted from games where release_year = :val", {'val': request.form["search"]})
+                transfer = list(result)
+                rows=len(transfer)
             else:
                 flash("Год должен состоять из цифр!")
                 return redirect("http://127.0.0.1:5000/games/")
 
         elif request.form["criteria"] == "quantity":
             if request.form["search"].isdigit():
-                rows = Games.query.filter_by(quantity=request.form["search"]).count()
-                result = db.session.execute("SELECT * FROM games WHERE quantity = :val", {'val': request.form["search"]})
+                result = db.session.execute("select *, ROUND(price - (price * .10), 2) AS discounted from games where quantity = :val", {'val': request.form["search"]})
+                transfer = list(result)
+                rows=len(transfer)
             else:
                 flash("Количество должно состоять из цифр!")
                 return redirect("http://127.0.0.1:5000/games/")
 
         elif request.form["criteria"] == "price":
             if request.form["search"].isdigit():
-                rows = Games.query.filter_by(price=request.form["search"]).count()
-                result = db.session.execute("SELECT * FROM games WHERE price = :val", {'val': request.form["search"]})
+                result = db.session.execute("select *, ROUND(price - (price * .10), 2) AS discounted from games where price = :val", {'val': request.form["search"]})
+                transfer = list(result)
+                rows=len(transfer)
             else:
                 flash("Цена должна состоять из цифр!")
                 return redirect("http://127.0.0.1:5000/games/")
-
-        aids = [row[0] for row in result] # Тут я еще не допер как извлечь возврат
-        for aid in aids:
-            pupa = Games.query.filter_by(id=aids[i]).first()
-            i=i+1
-            transfer.append(pupa) 
         return render_template("tablegame.html", rows = rows, transfer = transfer)
     else:
-        rows = Games.query.count()
-        transfer = []
-        for x in range (1, rows+1):
-            pupa = Games.query.get(x)
-            transfer.append(pupa)
+        result = db.session.execute("select *, ROUND(price - (price * .10), 2) AS discounted from games")
+        transfer = list(result)
+        rows=len(transfer)
         return render_template("tablegame.html", rows = rows, transfer = transfer) 
 
 @app.route('/orders/', methods = ["POST", "GET"])
 def tableorder():
     if request.method == "POST":  # И ТУТ Я НАКОНЕЦ ДОПЕР
+        if (request.form.get("show_id") == "on"):
+            show_id = True
+        else:
+            show_id = False
+        if (request.form["search"] == ''): # Великий костыль для того, чтобы учитывалось значение чекбокса при пустом запросе
+            flash("Пустой запрос. Возвращена вся таблица.")
+            result = db.session.execute("select o.*, c.name, c.email, g.game_name from clients c inner join public.order o on c.id=o.client_id inner join games g on o.game_id=g.id")
+            transfer = list(result)
+            rows=len(transfer)
+            return render_template("tableorder.html", transfer = transfer, rows = rows, show_id = show_id)
+            #return redirect("http://127.0.0.1:5000/orders/")
         if request.form["criteria"] == "client_id":
             if request.form["search"].isdigit():
                 result = db.session.execute("select o.*, c.name, c.email, g.game_name from clients c inner join public.order o on c.id=o.client_id inner join games g on o.game_id=g.id where o.client_id= :val", {'val': request.form["search"]})
@@ -261,7 +272,10 @@ def tableorder():
             else:
                 flash("Дата в неправильном формате! (Нужный формат YYYY-MM-DD)")
                 return redirect("http://127.0.0.1:5000/orders/")
-        return render_template("tableorder.html", transfer = transfer, rows = rows)
+        if (request.form.get("show_id") == "on"):
+            return render_template("tableorder.html", transfer = transfer, rows = rows, show_id = True)
+        else:
+            return render_template("tableorder.html", transfer = transfer, rows = rows)
 
     else:
         result = db.session.execute("select o.*, c.name, c.email, g.game_name from clients c inner join public.order o on c.id=o.client_id inner join games g on o.game_id=g.id")

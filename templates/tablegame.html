@@ -43,6 +43,7 @@
             <th scope="col">Количество</th>
             <th scope="col">Картинка</th>
             <th scope="col">Цена</th>
+            <th scope="col">Премиум цена</th>
           </tr>
         </thead>
         <tbody>
@@ -55,6 +56,7 @@
             <td>{{transfer[x].quantity}}</td>
             <td><a href="{{transfer[x].pic_url}}">{{transfer[x].game_name}}</a></td>
             <td>{{transfer[x].price}}</td>
+            <td>{{transfer[x].discounted}}</td>
             </tr>
             {% endfor %}
         </tbody>

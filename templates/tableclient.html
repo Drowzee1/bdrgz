@@ -5,12 +5,19 @@
 <form action="#" method = "POST" enctype="multipart/form-data" autocomplete="off">
 <div class="row">
     <div class="col">
-        <select name ="criteria" class="form-control" id="exampleFormControlSelect1" >
-            <option disabled>Выберите критерий</option>
-                <option value="name">Имя</option>
-                <option value="email">Почта</option>
-                <option value="phone">Телефон</option>
-        </select>
+ 
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="inlineRadio1" name="criteria" value="name" checked>
+          <label class="form-check-label" for="inlineRadio1">Имя</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="inlineRadio2" name="criteria" value="email">
+          <label class="form-check-label" for="inlineRadio2">Почта</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="inlineRadio3" name="criteria" value="phone">
+          <label class="form-check-label" for="inlineRadio3">Телефон</label>
+        </div>
     </div>
     <div class="col">
       <input type="text" name="search" class="form-control">
